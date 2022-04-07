@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import * as Chime from 'amazon-chime-sdk-js';
-
+import {launchCamera} from 'react-native-image-picker';
 import {
   StyleSheet,
   Text,
@@ -35,16 +35,25 @@ function App() {
 
   
 
-
+  
   const startCall = async () => { 
     const response = await axios.get('http://172.20.10.3:3001/meeting')
-    console.log("api reponse from startCall",response.data.meetingResponse)
-    console.log("api attende from startCall",response.data.attendee)
+    // const response = await axios.get('http://192.168.1.114:3001/meeting')
+
+    // console.log("api reponse from startCall",response.data.meetingResponse)
+    // console.log("api attende from startCall",response.data.attendee)
     setMeetingResponse(response.data.meetingResponse)
     setAttendeeResponse(response.data.attendee)
     setCallCreated(true)
   }
-  const joinVideoCall = async () => { 
+  const joinVideoCall = async () => {
+    let options = {
+      mediaType: 'video',
+      maxWidth: 300,
+      maxHeight: 550,
+    };
+    launchCamera(options, (response) => {
+      console.log('Response = ', response);}) 
     const logger = new Chime.ConsoleLogger('ChimeMeetingLogs', Chime.LogLevel.INFO);
     const deviceController = new Chime.DefaultDeviceController(logger);
     // console.log("api reponse from joinvideoCall",meetingResponse)
